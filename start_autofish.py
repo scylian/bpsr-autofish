@@ -1,3 +1,4 @@
+import threading
 import time
 from src.automation import VisionController, EnhancedVisionController, TransparentVisionController, HybridMouseController, HybridKeyboardController
 
@@ -11,6 +12,7 @@ move_color = (249, 188, 23)
 pole_color = (220, 108, 27)
 escape_color = (2, 17, 83)
 level_up = False
+sleep_cancel_event = threading.Event()
 
 def continue_fishing():
     print("AAAAGAIN!")
@@ -50,24 +52,28 @@ def check_rod():
         continue_fishing()
 
 def on_fish_bite(event_data):
-    global level_up
+    global level_up, sleep_cancel_event
     print("🎉 SUCCESS! Hooked that bitch!")
     mouse.mouse_down(955, 568, button="left")
     level_up = True
-    time.sleep(120)
-    if level_up:
-        mouse.mouse_up(button="left")
-        time.sleep(4)
-        mouse.click(1584, 964, method="pyautogui")
-        time.sleep(2)
-        check_rod()
 
+    # Interruptible sleep for 120 seconds
+    sleep_cancel_event.clear() # Reset the event
+    if not sleep_cancel_event.wait(120): # Returns False if timeout, True if set
+        # Sleep completed normally (not interrupted)
+        if level_up:
+            mouse.mouse_up(button="left")
+            time.sleep(4)
+            mouse.click(1584, 964, method="pyautogui")
+            time.sleep(2)
+            check_rod()
 
 def on_fish_caught(event_data):
-    global level_up
+    global level_up, sleep_cancel_event
     print("🐟 CAUGHT THAT MOTHAFUCKA!")
     print(f"Fish caught: {event_data['trigger_count']}")
     level_up = False
+    sleep_cancel_event.set() # Cancel the sleep in on_fish_bite
     mouse.mouse_up(button="left")
     time.sleep(4)
     mouse.click(1584, 964, method="pyautogui")
