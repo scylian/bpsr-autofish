@@ -1,0 +1,22 @@
+# Automation packages
+pyautogui>=0.9.54
+pynput>=1.7.6
+keyboard>=0.13.5
+
+# Computer vision packages
+opencv-python>=4.8.0
+numpy>=1.24.0
+pillow>=10.0.0
+scikit-image>=0.21.0
+
+# Screen capture and image processing
+mss>=9.0.1
+pygetwindow>=0.0.9
+
+# Testing framework
+pytest>=7.4.0
+pytest-mock>=3.11.1
+
+# Utilities
+python-dotenv>=1.0.0
+colorama>=0.4.6
