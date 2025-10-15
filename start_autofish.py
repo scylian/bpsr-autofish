@@ -9,7 +9,8 @@ bite_color = (255, 75, 1)
 catch_color = (255, 241, 157)
 move_color = (249, 188, 23)
 pole_color = (220, 108, 27)
-escape_color= (2, 17, 83)
+escape_color = (2, 17, 83)
+level_up = False
 
 def continue_fishing():
     print("AAAAGAIN!")
@@ -18,20 +19,20 @@ def continue_fishing():
     mouse.click(955, 568, method="winapi")
 
 def buy_pole():
-    print("Broke your dick, buying a new one...")
-    time.sleep(1)
-    keyboard.key_down('alt', method="auto")
-    mouse.click(1669, 1015, method="pyautogui")
-    keyboard.key_up('alt', method="auto")
+    print("Broke your dick, getting a new one...")
+    # time.sleep(1)
+    # keyboard.key_down('alt', method="auto")
+    # mouse.click(1669, 1015, method="pyautogui")
+    # keyboard.key_up('alt', method="auto")
+    # time.sleep(2)
+    # mouse.click(1451, 892, method="pyautogui")
+    # time.sleep(1)
+    # mouse.click(551, 377, method="pyautogui")
+    # time.sleep(1)
+    # mouse.click(1220, 923, method="pyautogui")
+    # time.sleep(1)
+    # mouse.click(1862, 50, method="pyautogui")
     time.sleep(2)
-    mouse.click(1451, 892, method="pyautogui")
-    time.sleep(1)
-    mouse.click(551, 377, method="pyautogui")
-    time.sleep(1)
-    mouse.click(1220, 923, method="pyautogui")
-    time.sleep(1)
-    mouse.click(1862, 50, method="pyautogui")
-    time.sleep(1)
     keyboard.key_down('alt', method="auto")
     mouse.click(1669, 1015, method="pyautogui")
     keyboard.key_up('alt', method="auto")
@@ -49,12 +50,24 @@ def check_rod():
         continue_fishing()
 
 def on_fish_bite(event_data):
+    global level_up
     print("🎉 SUCCESS! Hooked that bitch!")
     mouse.mouse_down(955, 568, button="left")
+    level_up = True
+    time.sleep(120)
+    if level_up:
+        mouse.mouse_up(button="left")
+        time.sleep(4)
+        mouse.click(1584, 964, method="pyautogui")
+        time.sleep(2)
+        check_rod()
+
 
 def on_fish_caught(event_data):
+    global level_up
     print("🐟 CAUGHT THAT MOTHAFUCKA!")
     print(f"Fish caught: {event_data['trigger_count']}")
+    level_up = False
     mouse.mouse_up(button="left")
     time.sleep(4)
     mouse.click(1584, 964, method="pyautogui")
