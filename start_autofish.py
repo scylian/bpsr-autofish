@@ -19,8 +19,11 @@ def continue_fishing():
 
 def buy_pole():
     print("Broke your dick, buying a new one...")
-    keyboard.press_key('m', presses=1, method="game")
     time.sleep(1)
+    keyboard.key_down('alt', method="auto")
+    mouse.click(1669, 1015, method="pyautogui")
+    keyboard.key_up('alt', method="auto")
+    time.sleep(2)
     mouse.click(1451, 892, method="pyautogui")
     time.sleep(1)
     mouse.click(551, 377, method="pyautogui")
