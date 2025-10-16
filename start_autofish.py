@@ -22,18 +22,6 @@ def continue_fishing():
 
 def buy_pole():
     print("Broke your dick, getting a new one...")
-    # time.sleep(1)
-    # keyboard.key_down('alt', method="auto")
-    # mouse.click(1669, 1015, method="pyautogui")
-    # keyboard.key_up('alt', method="auto")
-    # time.sleep(2)
-    # mouse.click(1451, 892, method="pyautogui")
-    # time.sleep(1)
-    # mouse.click(551, 377, method="pyautogui")
-    # time.sleep(1)
-    # mouse.click(1220, 923, method="pyautogui")
-    # time.sleep(1)
-    # mouse.click(1862, 50, method="pyautogui")
     time.sleep(2)
     keyboard.key_down('alt', method="auto")
     mouse.click(1669, 1015, method="pyautogui")
@@ -59,7 +47,7 @@ def on_fish_bite(event_data):
 
     # Interruptible sleep for 120 seconds
     sleep_cancel_event.clear() # Reset the event
-    if not sleep_cancel_event.wait(120): # Returns False if timeout, True if set
+    if not sleep_cancel_event.wait(30): # Returns False if timeout, True if set
         # Sleep completed normally (not interrupted)
         if level_up:
             mouse.mouse_up(button="left")
