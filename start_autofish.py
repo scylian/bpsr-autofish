@@ -11,23 +11,14 @@ catch_color = (255, 241, 157)
 move_color = (249, 188, 23)
 pole_color = (220, 108, 27)
 escape_color = (2, 17, 83)
-bot_crashed = False
+level_up = False
 sleep_cancel_event = threading.Event()
 
 def continue_fishing():
-    global bot_crashed, sleep_cancel_event
     print("AAAAGAIN!")
     print("🤖 Autofish is running! Press Ctrl+C to stop")
     print("✓ Waiting for that fat fuck to snag...")
     mouse.click(955, 568, method="winapi")
-    bot_crashed = True
-
-    # Interruptible sleep for 120 seconds
-    sleep_cancel_event.clear() # Reset the event
-    if not sleep_cancel_event.wait(30): # Returns False if timeout, True if set
-        # Sleep completed normally (not interrupted)
-        if bot_crashed:
-            check_rod()
 
 def buy_pole():
     print("Broke your dick, getting a new one...")
@@ -38,7 +29,7 @@ def buy_pole():
     time.sleep(1)
     mouse.click(1729, 607, method="pyautogui")
     time.sleep(2)
-    continue_fishing()
+    check_rod()
 
 def check_rod():
     pole_broken = vision.wait_for_pixel_color(1692, 989, pole_color, tolerance=10, timeout=1, check_interval=0.1)
@@ -49,16 +40,16 @@ def check_rod():
         continue_fishing()
 
 def on_fish_bite(event_data):
-    global bot_crashed, sleep_cancel_event
+    global level_up, sleep_cancel_event
     print("🎉 SUCCESS! Hooked that bitch!")
     mouse.mouse_down(955, 568, button="left")
-    bot_crashed = True
+    level_up = True
 
     # Interruptible sleep for 120 seconds
     sleep_cancel_event.clear() # Reset the event
     if not sleep_cancel_event.wait(30): # Returns False if timeout, True if set
         # Sleep completed normally (not interrupted)
-        if bot_crashed:
+        if level_up:
             mouse.mouse_up(button="left")
             time.sleep(4)
             mouse.click(1584, 964, method="pyautogui")
@@ -66,10 +57,10 @@ def on_fish_bite(event_data):
             check_rod()
 
 def on_fish_caught(event_data):
-    global bot_crashed, sleep_cancel_event
+    global level_up, sleep_cancel_event
     print("🐟 CAUGHT THAT MOTHAFUCKA!")
     print(f"Fish caught: {event_data['trigger_count']}")
-    bot_crashed = False
+    level_up = False
     sleep_cancel_event.set() # Cancel the sleep in on_fish_bite
     mouse.mouse_up(button="left")
     time.sleep(4)
@@ -78,10 +69,10 @@ def on_fish_caught(event_data):
     check_rod()
 
 def on_fish_escape(event_data):
-    global bot_crashed, sleep_cancel_event
+    global level_up, sleep_cancel_event
     print("❌ BITCH RAN!")
     print(f"Fish escaped: {event_data['trigger_count']}")
-    bot_crashed = False
+    level_up = False
     sleep_cancel_event.set() # Cancel the sleep in on_fish_bite
     mouse.mouse_up(button="left")
     time.sleep(4)
