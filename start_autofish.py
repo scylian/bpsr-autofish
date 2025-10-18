@@ -14,11 +14,21 @@ escape_color = (2, 17, 83)
 level_up = False
 sleep_cancel_event = threading.Event()
 
+def recovery_check():
+    print("No bite detected in 60 seconds, assuming stuck - restarting...")
+    check_rod()
+
 def continue_fishing():
     print("AAAAGAIN!")
     print("🤖 Autofish is running! Press Ctrl+C to stop")
     print("✓ Waiting for that fat fuck to snag...")
     mouse.click(955, 568, method="winapi")
+
+    recovery_timer = threading.Timer(60.0, recovery_check) # 60 second failsafe
+    recovery_timer.start()
+
+    global current_recovery_timer
+    current_recovery_timer = recovery_timer
 
 def buy_pole():
     print("Broke your dick, getting a new one...")
@@ -40,7 +50,11 @@ def check_rod():
         continue_fishing()
 
 def on_fish_bite(event_data):
-    global level_up, sleep_cancel_event
+    global level_up, sleep_cancel_event, current_recovery_timer
+    
+    if current_recovery_timer:
+        current_recovery_timer.cancel()
+    
     print("🎉 SUCCESS! Hooked that bitch!")
     mouse.mouse_down(955, 568, button="left")
     level_up = True
@@ -57,7 +71,11 @@ def on_fish_bite(event_data):
             check_rod()
 
 def on_fish_caught(event_data):
-    global level_up, sleep_cancel_event
+    global level_up, sleep_cancel_event, current_recovery_timer
+
+    if current_recovery_timer:
+        current_recovery_timer.cancel()
+
     print("🐟 CAUGHT THAT MOTHAFUCKA!")
     print(f"Fish caught: {event_data['trigger_count']}")
     level_up = False
